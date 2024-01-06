@@ -1,42 +1,41 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import { siteApi as SiteApi } from '@/domain/base/sites/api/siteApi'
+import { scanApi as ScanApi } from '@/domain/scans/api/scanApi'
 
 import { useAuthStore } from '@/domain/base/auth/store/useAuthStore'
 
-export const useSiteStore = defineStore('siteStore', {
+export const useScanStore = defineStore('scanStore', {
     state: () => ({
-        sites: [],
-        site: null,
+        scans: [],
+        scan: null,
         isLoading: true,
-        createModalOpen: false,
     }),
 
     getters: {
-      launch: (state) => state.site.launch_info
+      launch: (state) => state.scan.launch_info
     },
     
     actions: {
         index(params) {
           const auth = useAuthStore()
           this.isLoading = true
-          this.sites = []
+          this.scans = []
           
-          SiteApi.index(auth.organization, params)
+          ScanApi.index(auth.organization, params)
             .then(response => {
-              this.sites = response.data.data
+              this.scans = response.data.data
               this.isLoading = false
             }).catch(error => {
               console.log('Error', error.response.data)
             })
         },
         
-        async store(site) {
+        async store(scan) {
           const auth = useAuthStore()
           this.isLoading = true
           
-          await SiteApi.store(auth.organization, site)
+          await ScanApi.store(auth.organization, scan)
             .then(response => {
-              this.sites.push(response.data.data)
+              this.scans.push(response.data.data)
             }).catch(error => {
               console.log('Error', error.response.data)
             })
@@ -46,9 +45,9 @@ export const useSiteStore = defineStore('siteStore', {
           const auth = useAuthStore()
           this.isLoading = true
           
-          SiteApi.show(auth.organization, id)
+          ScanApi.show(auth.organization, id)
             .then(response => {
-              this.site = response.data.data
+              this.scan = response.data.data
               this.isLoading = false
             })
         },
@@ -57,9 +56,9 @@ export const useSiteStore = defineStore('siteStore', {
           const auth = useAuthStore()
           this.isLoading = true
           
-          SiteApi.update(auth.organization, this.site.id, this.site)
+          ScanApi.update(auth.organization, this.scan.id, this.scan)
             .then(response => {
-              console.log('Site successfully updated')
+              console.log('Scan successfully updated')
               this.isLoading = false
             })
         },
@@ -68,15 +67,11 @@ export const useSiteStore = defineStore('siteStore', {
           const auth = useAuthStore()
           this.isLoading = true
           
-          SiteApi.destroy(auth.organization, id)
+          ScanApi.destroy(auth.organization, id)
             .then(response => {
-              this.sites = this.sites.filter((site) => site.id !== id)
+              this.scans = this.scans.filter((scan) => scan.id !== id)
               this.isLoading = false
             })
-        },
-        
-        toggleCreateModal() {
-          this.createModalOpen = !this.createModalOpen
         },
     }
 })
@@ -86,5 +81,5 @@ export const useSiteStore = defineStore('siteStore', {
  * https://pinia.vuejs.org/cookbook/hot-module-replacement.html
  */
 if (import.meta.hot) {
-    import.meta.hot.accept(acceptHMRUpdate(useSiteStore, import.meta.hot))
+    import.meta.hot.accept(acceptHMRUpdate(useScanStore, import.meta.hot))
 }

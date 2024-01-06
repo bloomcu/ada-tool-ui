@@ -179,10 +179,8 @@ import {
 } from '@headlessui/vue'
 
 import {
-  // CalendarIcon,
-  // ChartPieIcon,
+  ChartPieIcon,
   Cog6ToothIcon,
-  // DocumentDuplicateIcon,
   FolderIcon,
   HomeIcon,
   XMarkIcon,
@@ -191,17 +189,15 @@ import {
 const navigation = [
   { name: 'Dashboard', to: { name: 'dashboard' }, icon: HomeIcon},
   { name: 'Sites', to: { name: 'sites'}, icon: FolderIcon},
-  // { name: 'Documents', to: {}, icon: DocumentDuplicateIcon},
+  { name: 'Scans', to: { name: 'scans' }, icon: ChartPieIcon},
   { name: 'Settings', to: { name: 'settings'}, icon: Cog6ToothIcon},
-  // { name: 'Calendar', to: {}, icon: CalendarIcon},
-  // { name: 'Reports', to: {}, icon: ChartPieIcon},
 ]
 
-const teams = [
-  { id: 1, name: 'Heroicons', href: '#', initial: 'H', current: false },
-  { id: 2, name: 'Tailwind Labs', href: '#', initial: 'T', current: false },
-  { id: 3, name: 'Workcation', href: '#', initial: 'W', current: false },
-]
+// const teams = [
+//   { id: 1, name: 'Heroicons', href: '#', initial: 'H', current: false },
+//   { id: 2, name: 'Tailwind Labs', href: '#', initial: 'T', current: false },
+//   { id: 3, name: 'Workcation', href: '#', initial: 'W', current: false },
+// ]
 </script>
 
 <style lang="scss" scoped>

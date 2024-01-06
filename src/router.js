@@ -3,28 +3,27 @@ import { useErrorStore } from '@/app/store/base/useErrorStore'
 import { useAuthStore } from '@/domain/base/auth/store/useAuthStore'
 import baseRoutes from '@/routes/base/routes.js'
 
+// App Routes
+import dashboard from '@/views/dashboard/routes/index.js'
+import scans from '@/views/scans/routes/index.js'
+import sites from '@/views/sites/routes/index.js'
+
+// Sandbox, comment out on prod
 import Sandbox from '@/views/Sandbox.vue';
-// import Survey from '@/views/Survey.vue';
-// import Flowchart from '@/views/Flowchart.vue';
 
 const routes = [
   ...baseRoutes,
-  {
-    path: '/',
-    redirect: 'organizations'
-  },
+  ...dashboard,
+  ...scans,
+  ...sites,
   { 
     path: '/sandbox', 
     component: Sandbox 
   },
-  // { 
-  //   path: '/survey', 
-  //   component: Survey 
-  // },
-  // { 
-  //   path: '/flowchart', 
-  //   component: Flowchart
-  // },
+  {
+    path: '/', // Redirect root organizations
+    redirect: 'organizations'
+  },
 ]
 
 const router = createRouter({

@@ -24,7 +24,7 @@ const siteApi = {
     /**
      * Show a site
      *
-     * @param Integer id [Slug of the site you want to show]
+     * @param Integer id [Id of the site you want to show]
      * @return promise
      */
     show(organization, id) {

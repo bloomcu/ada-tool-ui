@@ -2,7 +2,7 @@
   <LayoutWithSidebar>
     <template #topbar>
       <h1 class="text-2xl font-medium leading-6 text-gray-900 tracking-tight">Sites</h1>
-      <AppButton @click="siteStore.toggleCreateModal">Create site</AppButton>
+      <AppButton variant="secondary" @click="siteStore.toggleCreateModal">Create site</AppButton>
     </template>
 
     <!-- Sites -->
@@ -19,8 +19,8 @@
           </div>
 
           <div class="flex items-center gap-x-4 z-10">
-            <AppButton variant="tertiary" :to="{ name: 'sitesLaunch', params: { site: site.id } }">Launch</AppButton>
-            <AppButton variant="link" :to="{ name: 'sitesEdit', params: { site: site.id } }">Edit</AppButton>
+            <AppButton @click="">Run a new scan</AppButton>
+            <AppButton variant="tertiary" :to="{ name: 'sitesEdit', params: { site: site.id } }">Edit</AppButton>
           </div>
         </li>
       </ul>
@@ -42,11 +42,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { useSiteStore } from '@/domain/base/sites/store/useSiteStore'
+import { onMounted } from 'vue'
+import { useSiteStore } from '@/domain/sites/store/useSiteStore'
 import LayoutWithSidebar from '@/app/layouts/LayoutWithSidebar.vue'
-import CreateSiteModal from '@/views/base/sites/modals/CreateSiteModal.vue'
+import CreateSiteModal from '@/views/sites/modals/CreateSiteModal.vue'
 
 const siteStore = useSiteStore()
 

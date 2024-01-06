@@ -1,5 +1,6 @@
 <template>
     <LayoutDefault>
+        This is a space to test components.
         <AppCard padding="sm" class="w-60">            
             <AppNestedMenu 
                 title="Category"

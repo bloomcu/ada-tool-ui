@@ -3,7 +3,7 @@
     <AppSidebar :open="sidebarOpen" @close="sidebarOpen = false"/>
 
     <main class="py-4 lg:pl-72">
-        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <!-- Topbar -->
           <div class="flex items-center gap-x-4 mt-4 mb-12">
             <button type="button" class="-m-2.5 p-2.5 text-gray-700 lg:hidden" @click="sidebarOpen = true">

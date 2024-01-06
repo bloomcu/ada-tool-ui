@@ -15,7 +15,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useSiteStore } from '@/domain/base/sites/store/useSiteStore'
+import { useSiteStore } from '@/domain/sites/store/useSiteStore'
 
 const siteStore = useSiteStore()
 
