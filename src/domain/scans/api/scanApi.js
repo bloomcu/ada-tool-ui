@@ -17,8 +17,8 @@ const scanApi = {
      * @param Object scan [Properties to create scan from]
      * @return promise
      */
-    store(organization, scan) {
-        return HttpClient.post(`/${organization}/scans`, scan)
+    store(organization, domain) {
+        return HttpClient.post(`/${organization}/scans`, {domain: domain})
     },
     
     /**
@@ -31,26 +31,26 @@ const scanApi = {
       return HttpClient.get(`/${organization}/scans/${id}`)
     },
     
-    /**
-     * Update a scan
-     *
-     * @param Integer id [Id of the scan you want to update]
-     * @param Object  scan [Properties to update scan with]
-     * @return promise
-     */
-    update(organization, id, scan) {
-      return HttpClient.put(`/${organization}/scans/${id}`, scan)
-    },
+    // /**
+    //  * Update a scan
+    //  *
+    //  * @param Integer id [Id of the scan you want to update]
+    //  * @param Object  scan [Properties to update scan with]
+    //  * @return promise
+    //  */
+    // update(organization, id, scan) {
+    //   return HttpClient.put(`/${organization}/scans/${id}`, scan)
+    // },
     
-    /**
-     * Destroy a scan
-     *
-     * @param Integer id [Id of the file you want to destroy]
-     * @return promise
-     */
-    destroy(organization, id) {
-        return HttpClient.delete(`/${organization}/scans/${id}`)
-    },
+    // /**
+    //  * Destroy a scan
+    //  *
+    //  * @param Integer id [Id of the file you want to destroy]
+    //  * @return promise
+    //  */
+    // destroy(organization, id) {
+    //     return HttpClient.delete(`/${organization}/scans/${id}`)
+    // },
 }
 
 export { scanApi }

@@ -9,11 +9,8 @@ export const useSiteStore = defineStore('siteStore', {
         site: null,
         isLoading: true,
         createModalOpen: false,
+        editModalOpen: false,
     }),
-
-    getters: {
-      launch: (state) => state.site.launch_info
-    },
     
     actions: {
         index(params) {
@@ -53,11 +50,11 @@ export const useSiteStore = defineStore('siteStore', {
             })
         },
         
-        update() {
+        async update() {
           const auth = useAuthStore()
           this.isLoading = true
           
-          SiteApi.update(auth.organization, this.site.id, this.site)
+          await SiteApi.update(auth.organization, this.site.id, this.site)
             .then(response => {
               console.log('Site successfully updated')
               this.isLoading = false
@@ -77,6 +74,10 @@ export const useSiteStore = defineStore('siteStore', {
         
         toggleCreateModal() {
           this.createModalOpen = !this.createModalOpen
+        },
+
+        toggleEditModal() {
+          this.editModalOpen = !this.editModalOpen
         },
     }
 })

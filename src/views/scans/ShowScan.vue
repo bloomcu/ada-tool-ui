@@ -3,29 +3,24 @@
     <!-- Header -->
     <AppHeader>
       <div>
-        <h1 class="text-3xl font-medium leading-6 text-gray-900">Edit scan</h1>
-        <p class="leading-6 text-gray-500 mt-2">{{ scanStore.scan.domain }}</p>
+        <h1 class="text-3xl font-medium leading-6 text-gray-900">
+          Ran {{ moment(scanStore.scan.created_at).fromNow() }} on {{ scanStore.scan.site.domain }}
+        </h1>
+        <p class="leading-6 text-gray-400 mt-2">Status: Succeeded</p>
       </div>
       <AppButton :to="{ name: 'scans' }" variant="secondary">Back</AppButton>
     </AppHeader>
 
     <div class="flex flex-row items-start gap-x-6">
-      <!-- General -->
       <AppCard padding="sm" class="flex-1">
-        <div class="flex flex-col gap-4">
-          <h3 class="text-lg font-medium leading-7 text-gray-900 tracking-tight sm:truncate sm:text-2xl">General</h3>
-          <AppInput v-model="scanStore.scan.title" label="Title" required />
-          <AppInput v-model="scanStore.scan.domain" label="Domain" required />
-          <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 pt-4">
-            <AppButton @click="scanStore.update()" :loading="scanStore.isLoading">Update</AppButton>
-          </div>
-        </div>
+        List evaluations here...
       </AppCard>
     </div>
   </LayoutDefault>
 </template>
 
 <script setup>
+import moment from 'moment'
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useScanStore } from '@/domain/scans/store/useScanStore'

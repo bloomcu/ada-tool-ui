@@ -9,10 +9,6 @@ export const useScanStore = defineStore('scanStore', {
         scan: null,
         isLoading: true,
     }),
-
-    getters: {
-      launch: (state) => state.scan.launch_info
-    },
     
     actions: {
         index(params) {
@@ -29,13 +25,15 @@ export const useScanStore = defineStore('scanStore', {
             })
         },
         
-        async store(scan) {
+        async store(domain) {
           const auth = useAuthStore()
           this.isLoading = true
-          
-          await ScanApi.store(auth.organization, scan)
+
+          await ScanApi.store(auth.organization, domain)
             .then(response => {
+              console.log(response)
               this.scans.push(response.data.data)
+              this.scan = response.data.data
             }).catch(error => {
               console.log('Error', error.response.data)
             })
@@ -52,27 +50,27 @@ export const useScanStore = defineStore('scanStore', {
             })
         },
         
-        update() {
-          const auth = useAuthStore()
-          this.isLoading = true
+        // update() {
+        //   const auth = useAuthStore()
+        //   this.isLoading = true
           
-          ScanApi.update(auth.organization, this.scan.id, this.scan)
-            .then(response => {
-              console.log('Scan successfully updated')
-              this.isLoading = false
-            })
-        },
+        //   ScanApi.update(auth.organization, this.scan.id, this.scan)
+        //     .then(response => {
+        //       console.log('Scan successfully updated')
+        //       this.isLoading = false
+        //     })
+        // },
         
-        destroy(id) {
-          const auth = useAuthStore()
-          this.isLoading = true
+        // destroy(id) {
+        //   const auth = useAuthStore()
+        //   this.isLoading = true
           
-          ScanApi.destroy(auth.organization, id)
-            .then(response => {
-              this.scans = this.scans.filter((scan) => scan.id !== id)
-              this.isLoading = false
-            })
-        },
+        //   ScanApi.destroy(auth.organization, id)
+        //     .then(response => {
+        //       this.scans = this.scans.filter((scan) => scan.id !== id)
+        //       this.isLoading = false
+        //     })
+        // },
     }
 })
 

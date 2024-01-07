@@ -177,9 +177,10 @@ import {
   TransitionChild,
   TransitionRoot,
 } from '@headlessui/vue'
+import { MagnifyingGlassCircleIcon } from '@heroicons/vue/20/solid'
 
 import {
-  ChartPieIcon,
+  MagnifyingGlassIcon,
   Cog6ToothIcon,
   FolderIcon,
   HomeIcon,
@@ -189,7 +190,7 @@ import {
 const navigation = [
   { name: 'Dashboard', to: { name: 'dashboard' }, icon: HomeIcon},
   { name: 'Sites', to: { name: 'sites'}, icon: FolderIcon},
-  { name: 'Scans', to: { name: 'scans' }, icon: ChartPieIcon},
+  { name: 'Scans', to: { name: 'scans' }, icon: MagnifyingGlassIcon},
   { name: 'Settings', to: { name: 'settings'}, icon: Cog6ToothIcon},
 ]
 

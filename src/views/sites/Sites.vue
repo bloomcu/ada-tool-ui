@@ -13,14 +13,14 @@
             <p class="text-base font-medium leading-6 text-gray-900">{{ site.domain }}</p>
             <p class="mt-1 text-sm leading-5 text-gray-500">{{ site.title }}</p>
 
-            <RouterLink :to="{ name: 'sitesEdit', params: { site: site.id } }">
+            <RouterLink :to="{ name: 'showSite', params: { site: site.id } }">
               <span class="absolute inset-x-0 -top-px bottom-0" />
             </RouterLink>
           </div>
 
           <div class="flex items-center gap-x-4 z-10">
-            <AppButton @click="">Run a new scan</AppButton>
-            <AppButton variant="tertiary" :to="{ name: 'sitesEdit', params: { site: site.id } }">Edit</AppButton>
+            <AppButton @click="runScan(site.domain)">Scan this site</AppButton>
+            <AppButton variant="tertiary" :to="{ name: 'showSite', params: { site: site.id } }">Edit</AppButton>
           </div>
         </li>
       </ul>
@@ -43,11 +43,21 @@
 
 <script setup>
 import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useSiteStore } from '@/domain/sites/store/useSiteStore'
+import { useScanStore } from '@/domain/scans/store/useScanStore'
 import LayoutWithSidebar from '@/app/layouts/LayoutWithSidebar.vue'
 import CreateSiteModal from '@/views/sites/modals/CreateSiteModal.vue'
 
+const router = useRouter()
 const siteStore = useSiteStore()
+const scanStore = useScanStore()
+
+async function runScan(domain) {
+  scanStore.store(domain).then(() => {
+    router.push({ name: 'showScan', params: { scan: scanStore.scan.id } })
+  })
+}
 
 onMounted(() => {
   siteStore.index()

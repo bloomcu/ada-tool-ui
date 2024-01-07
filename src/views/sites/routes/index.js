@@ -1,5 +1,5 @@
 import Sites from '@/views/sites/Sites.vue'
-import SitesEdit from '@/views/sites/SitesEdit.vue'
+import ShowSite from '@/views/sites/ShowSite.vue'
 
 export default [
   {
@@ -9,7 +9,7 @@ export default [
   },
   {
     path: "/:organization/sites/:site",
-    name: "sitesEdit",
-    component: SitesEdit,
+    name: "showSite",
+    component: ShowSite,
   },
 ]
