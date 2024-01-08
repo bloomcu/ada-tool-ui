@@ -10,8 +10,9 @@
       <ul role="list" class="divide-y divide-gray-100">
         <li v-for="site in siteStore.sites" :key="site.id" class="relative flex justify-between gap-x-6 px-4 py-5 hover:bg-gray-50 sm:px-6">
           <div class="min-w-0 flex-auto">
-            <p class="text-base font-medium leading-6 text-gray-900">{{ site.domain }}</p>
-            <p class="mt-1 text-sm leading-5 text-gray-500">{{ site.title }}</p>
+            <p class="text-sm leading-5 text-gray-500">{{ site.title }}</p>
+            <p class="mt-1 text-base font-medium leading-6 text-gray-900">{{ site.domain }}</p>
+            <p class="mt-1 text-base text-indigo-600">{{ site.scans.length }} scans</p>
 
             <RouterLink :to="{ name: 'showSite', params: { site: site.id } }">
               <span class="absolute inset-x-0 -top-px bottom-0" />
