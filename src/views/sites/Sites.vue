@@ -21,7 +21,7 @@
 
           <div class="flex items-center gap-x-4 z-10">
             <AppButton @click="runScan(site.id)">Scan this site</AppButton>
-            <AppButton variant="tertiary" :to="{ name: 'showSite', params: { site: site.id } }">Edit</AppButton>
+            <AppButton variant="tertiary" :to="{ name: 'showSite', params: { site: site.id } }">View</AppButton>
           </div>
         </li>
       </ul>
