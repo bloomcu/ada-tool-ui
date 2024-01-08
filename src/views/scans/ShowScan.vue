@@ -29,7 +29,7 @@
                   <tr>
                     <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-0">Title</th>
                     <th scope="col" class="px-3 py-3.5 text-left text-sm font-medium text-gray-900">Url</th>
-                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-medium text-gray-900">Results</th>
+                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-medium text-gray-900">Rule Results</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
