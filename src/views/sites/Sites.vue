@@ -19,7 +19,7 @@
           </div>
 
           <div class="flex items-center gap-x-4 z-10">
-            <AppButton @click="runScan(site.domain)">Scan this site</AppButton>
+            <AppButton @click="runScan(site.id)">Scan this site</AppButton>
             <AppButton variant="tertiary" :to="{ name: 'showSite', params: { site: site.id } }">Edit</AppButton>
           </div>
         </li>
@@ -45,17 +45,15 @@
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useSiteStore } from '@/domain/sites/store/useSiteStore'
-import { useScanStore } from '@/domain/scans/store/useScanStore'
 import LayoutWithSidebar from '@/app/layouts/LayoutWithSidebar.vue'
 import CreateSiteModal from '@/views/sites/modals/CreateSiteModal.vue'
 
 const router = useRouter()
 const siteStore = useSiteStore()
-const scanStore = useScanStore()
 
-async function runScan(domain) {
-  scanStore.store(domain).then(() => {
-    router.push({ name: 'showScan', params: { scan: scanStore.scan.id } })
+async function runScan(siteId) {
+  await siteStore.runScan(siteId).then(scan => {
+    router.push({ name: 'showScan', params: { scan: scan.id } })
   })
 }
 

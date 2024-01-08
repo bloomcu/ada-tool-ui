@@ -71,6 +71,24 @@ export const useSiteStore = defineStore('siteStore', {
               this.isLoading = false
             })
         },
+
+        async runScan(site) {
+          this.isLoading = true
+
+          const auth = useAuthStore()
+          const scan = await SiteApi.runScan(auth.organization, site)
+
+          return scan.data.data
+
+          // await SiteApi.runScan(auth.organization, site)
+          //   .then(response => {
+          //     return response.data.data
+          //     // this.scans.push(response.data.data)
+          //     // this.scan = response.data.data
+          //   }).catch(error => {
+          //     console.log('Error', error.response.data)
+          //   })
+        },
         
         toggleCreateModal() {
           this.createModalOpen = !this.createModalOpen

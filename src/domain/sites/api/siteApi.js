@@ -51,6 +51,17 @@ const siteApi = {
     destroy(organization, id) {
         return HttpClient.delete(`/${organization}/sites/${id}`)
     },
+
+    /**
+     * Store a site scan
+     *
+     * @param Object organization [Id of the organization you want to act upon]
+     * @param Object site [Id of the site you want to scan]
+     * @return promise
+     */
+    runScan(organization, site) {
+      return HttpClient.post(`/${organization}/sites/${site}/scan`)
+  },
 }
 
 export { siteApi }

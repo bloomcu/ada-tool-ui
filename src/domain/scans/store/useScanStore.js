@@ -25,20 +25,6 @@ export const useScanStore = defineStore('scanStore', {
             })
         },
         
-        async store(domain) {
-          const auth = useAuthStore()
-          this.isLoading = true
-
-          await ScanApi.store(auth.organization, domain)
-            .then(response => {
-              console.log(response)
-              this.scans.push(response.data.data)
-              this.scan = response.data.data
-            }).catch(error => {
-              console.log('Error', error.response.data)
-            })
-        },
-        
         show(id) {
           const auth = useAuthStore()
           this.isLoading = true

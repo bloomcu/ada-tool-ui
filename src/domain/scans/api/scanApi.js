@@ -12,16 +12,6 @@ const scanApi = {
     },
     
     /**
-     * Store a scan
-     *
-     * @param Object scan [Properties to create scan from]
-     * @return promise
-     */
-    store(organization, domain) {
-        return HttpClient.post(`/${organization}/scans`, {domain: domain})
-    },
-    
-    /**
      * Show a scan
      *
      * @param Integer id [Id of the scan you want to show]
