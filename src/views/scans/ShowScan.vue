@@ -12,22 +12,62 @@
     </AppHeader>
 
     <div class="flex flex-row items-start gap-x-6">
-      <AppCard padding="sm" class="flex-1">
-        List evaluations here...
-      </AppCard>
+      <!-- Conditional import button -->
+      <AppButton v-if="scanStore.scan.status == 'SUCCEEDED' && !scanStore.scan.pages.length" @click="importDataset(scanStore.scan.id)" :loading="isImporting">
+        Import Results
+      </AppButton>
+      
+      <!-- Scanned pages -->
+      <AppCard v-if="scanStore.scan.pages.length" class="mb-12 w-full">
+        <h2 class="text-base font-medium leading-6 text-gray-900">Scanned {{ scanStore.scan.pages.length }} pages</h2>
+
+        <div class="mt-4 flow-root">
+          <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+              <table class="min-w-full divide-y divide-gray-300">
+                <thead>
+                  <tr>
+                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-0">Title</th>
+                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-medium text-gray-900">Url</th>
+                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-medium text-gray-900">Results</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                  <tr v-for="page in scanStore.scan.pages" :key="page.id">
+                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">{{ page.title }}</td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ page.results.eval_url }}</td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ page.results.rule_results.length }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </AppCard> <!-- end users table -->
     </div>
   </LayoutDefault>
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import moment from 'moment'
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useScanStore } from '@/domain/scans/store/useScanStore'
 import LayoutDefault from '@/app/layouts/LayoutDefault.vue'
 
+const isImporting = ref(false)
 const route = useRoute()
 const scanStore = useScanStore()
+
+async function importDataset(scanId) {
+  isImporting.value = true
+
+  await scanStore.importDataset(scanId).then(() => {
+    isImporting.value = false
+    scanStore.show(route.params.scan)
+  })
+}
 
 onMounted(() => {
   scanStore.show(route.params.scan).then(() => {

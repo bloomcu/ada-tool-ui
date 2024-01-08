@@ -36,13 +36,35 @@ export const useScanStore = defineStore('scanStore', {
             })
         },
         
-        checkStatus(id) {
+        async checkStatus(id) {
           const auth = useAuthStore()
           this.isLoading = true
           
-          ScanApi.checkStatus(auth.organization, id)
+          await ScanApi.checkStatus(auth.organization, id)
             .then(response => {
               this.scan.status = response.data.data
+              this.isLoading = false
+            })
+        },
+
+        async showDataset(id) {
+          const auth = useAuthStore()
+          this.isLoading = true
+          
+          await ScanApi.showDataset(auth.organization, id)
+            .then(response => {
+              this.scan.dataset = response.data.data
+              this.isLoading = false
+            })
+        },
+
+        async importDataset(id) {
+          const auth = useAuthStore()
+          this.isLoading = true
+          
+          await ScanApi.importDataset(auth.organization, id)
+            .then(response => {
+              this.scan.dataset = response.data.data
               this.isLoading = false
             })
         },
