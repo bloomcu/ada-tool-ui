@@ -6,7 +6,7 @@
         <h1 class="text-3xl font-medium leading-6 text-gray-900">
           Ran {{ moment(scanStore.scan.created_at).fromNow() }} on {{ scanStore.scan.site.domain }}
         </h1>
-        <p class="leading-6 text-gray-400 mt-2">Status: Succeeded</p>
+        <p class="leading-6 text-gray-400 mt-2">Status: (Insert run status)</p>
       </div>
       <AppButton :to="{ name: 'scans' }" variant="secondary">Back</AppButton>
     </AppHeader>

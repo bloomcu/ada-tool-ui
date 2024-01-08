@@ -13,7 +13,7 @@
             <p class="text-base font-medium leading-6 text-gray-900">
               Ran {{ moment(scan.created_at).fromNow() }} on {{ scan.site.domain }}
             </p>
-            <p class="mt-1 text-sm leading-5 text-gray-500">Status: Status: (Insert run status)</p>
+            <p class="mt-1 text-sm leading-5 text-gray-500">Status: (Insert run status)</p>
 
             <RouterLink :to="{ name: 'showScan', params: { scan: scan.id } }">
               <span class="absolute inset-x-0 -top-px bottom-0" />
