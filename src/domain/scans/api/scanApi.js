@@ -20,27 +20,16 @@ const scanApi = {
     show(organization, id) {
       return HttpClient.get(`/${organization}/scans/${id}`)
     },
-    
-    // /**
-    //  * Update a scan
-    //  *
-    //  * @param Integer id [Id of the scan you want to update]
-    //  * @param Object  scan [Properties to update scan with]
-    //  * @return promise
-    //  */
-    // update(organization, id, scan) {
-    //   return HttpClient.put(`/${organization}/scans/${id}`, scan)
-    // },
-    
-    // /**
-    //  * Destroy a scan
-    //  *
-    //  * @param Integer id [Id of the file you want to destroy]
-    //  * @return promise
-    //  */
-    // destroy(organization, id) {
-    //     return HttpClient.delete(`/${organization}/scans/${id}`)
-    // },
+
+    /**
+     * Check status of a scan
+     *
+     * @param Integer id [Id of the scan you want to check]
+     * @return promise
+     */
+    checkStatus(organization, id) {
+      return HttpClient.get(`/${organization}/scans/${id}/status`)
+    },
 }
 
 export { scanApi }

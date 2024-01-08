@@ -6,7 +6,7 @@
         <h1 class="text-3xl font-medium leading-6 text-gray-900">
           Ran {{ moment(scanStore.scan.created_at).fromNow() }} on {{ scanStore.scan.site.domain }}
         </h1>
-        <p class="leading-6 text-gray-400 mt-2">Status: (Insert run status)</p>
+        <p class="leading-6 text-gray-400 mt-2">Status: {{ scanStore.scan.status }}</p>
       </div>
       <AppButton :to="{ name: 'scans' }" variant="secondary">Back</AppButton>
     </AppHeader>
@@ -30,6 +30,8 @@ const route = useRoute()
 const scanStore = useScanStore()
 
 onMounted(() => {
-  scanStore.show(route.params.scan)
+  scanStore.show(route.params.scan).then(() => {
+    scanStore.checkStatus(route.params.scan)
+  })
 })
 </script>

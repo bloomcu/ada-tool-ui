@@ -25,38 +25,27 @@ export const useScanStore = defineStore('scanStore', {
             })
         },
         
-        show(id) {
+        async show(id) {
           const auth = useAuthStore()
           this.isLoading = true
           
-          ScanApi.show(auth.organization, id)
+          await ScanApi.show(auth.organization, id)
             .then(response => {
               this.scan = response.data.data
               this.isLoading = false
             })
         },
         
-        // update() {
-        //   const auth = useAuthStore()
-        //   this.isLoading = true
+        checkStatus(id) {
+          const auth = useAuthStore()
+          this.isLoading = true
           
-        //   ScanApi.update(auth.organization, this.scan.id, this.scan)
-        //     .then(response => {
-        //       console.log('Scan successfully updated')
-        //       this.isLoading = false
-        //     })
-        // },
-        
-        // destroy(id) {
-        //   const auth = useAuthStore()
-        //   this.isLoading = true
-          
-        //   ScanApi.destroy(auth.organization, id)
-        //     .then(response => {
-        //       this.scans = this.scans.filter((scan) => scan.id !== id)
-        //       this.isLoading = false
-        //     })
-        // },
+          ScanApi.checkStatus(auth.organization, id)
+            .then(response => {
+              this.scan.status = response.data.data
+              this.isLoading = false
+            })
+        },
     }
 })
 
