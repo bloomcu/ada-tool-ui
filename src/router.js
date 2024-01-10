@@ -7,6 +7,7 @@ import baseRoutes from '@/routes/base/routes.js'
 import dashboard from '@/views/dashboard/routes/index.js'
 import scans from '@/views/scans/routes/index.js'
 import sites from '@/views/sites/routes/index.js'
+import pages from '@/views/pages/routes/index.js'
 
 // Sandbox, comment out on prod
 import Sandbox from '@/views/Sandbox.vue';
@@ -16,6 +17,7 @@ const routes = [
   ...dashboard,
   ...scans,
   ...sites,
+  ...pages,
   { 
     path: '/sandbox', 
     component: Sandbox 

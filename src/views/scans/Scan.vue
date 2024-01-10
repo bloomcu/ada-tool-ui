@@ -33,7 +33,7 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
-                  <tr v-for="page in scanStore.scan.pages" :key="page.id">
+                  <tr v-for="page in scanStore.scan.pages" :key="page.id" @click="showPage(page.id)" class="hover:bg-gray-50 cursor-pointer">
                     <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">{{ page.title }}</td>
                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ page.results.eval_url }}</td>
                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ page.results.rule_results.length }}</td>
@@ -49,24 +49,19 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import moment from 'moment'
-import { onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useScanStore } from '@/domain/scans/store/useScanStore'
 import LayoutDefault from '@/app/layouts/LayoutDefault.vue'
 
 const isImporting = ref(false)
+const router = useRouter()
 const route = useRoute()
 const scanStore = useScanStore()
 
-async function importDataset(scanId) {
-  isImporting.value = true
-
-  await scanStore.importDataset(scanId).then(() => {
-    isImporting.value = false
-    scanStore.show(route.params.scan)
-  })
+async function showPage(pageId) {
+  router.push({ name: 'page', params: { scan: route.params.scan, page: pageId } })
 }
 
 onMounted(() => {
