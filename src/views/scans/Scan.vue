@@ -60,6 +60,15 @@ const router = useRouter()
 const route = useRoute()
 const scanStore = useScanStore()
 
+async function importDataset(scanId) {
+  isImporting.value = true
+  
+  await scanStore.importDataset(scanId).then(() => {
+    isImporting.value = false
+    scanStore.show(route.params.scan)
+  })
+}
+
 async function showPage(pageId) {
   router.push({ name: 'page', params: { scan: route.params.scan, page: pageId } })
 }
