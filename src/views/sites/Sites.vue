@@ -54,7 +54,7 @@ const siteStore = useSiteStore()
 
 async function runScan(siteId) {
   await siteStore.runScan(siteId).then(scan => {
-    router.push({ name: 'showScan', params: { scan: scan.id } })
+    router.push({ name: 'scan', params: { scan: scan.id } })
   })
 }
 

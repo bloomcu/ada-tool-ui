@@ -16,13 +16,13 @@
             <p class="mt-2 text-sm leading-5 text-gray-500">Last known status: {{ scan.status }}</p>
             <p class="mt-1 text-sm leading-5 text-gray-500">Scanned {{ scan.pages.length }} pages</p>
 
-            <RouterLink :to="{ name: 'showScan', params: { scan: scan.id } }">
+            <RouterLink :to="{ name: 'scan', params: { scan: scan.id } }">
               <span class="absolute inset-x-0 -top-px bottom-0" />
             </RouterLink>
           </div>
 
           <div class="flex items-center gap-x-4 z-10">
-            <AppButton variant="tertiary" :to="{ name: 'showScan', params: { scan: scan.id } }">View</AppButton>
+            <AppButton variant="tertiary" :to="{ name: 'scan', params: { scan: scan.id } }">View</AppButton>
           </div>
         </li>
       </ul>

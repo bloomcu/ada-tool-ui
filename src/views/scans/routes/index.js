@@ -1,5 +1,5 @@
 import Scans from '@/views/scans/Scans.vue'
-import ShowScan from '@/views/scans/ShowScan.vue'
+import Scan from '@/views/scans/Scan.vue'
 
 export default [
   {
@@ -9,7 +9,7 @@ export default [
   },
   {
     path: "/:organization/scans/:scan",
-    name: "showScan",
-    component: ShowScan,
-  },
+    name: "scan",
+    component: Scan,
+  }
 ]
