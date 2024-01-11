@@ -20,7 +20,25 @@
       <!-- Scanned pages -->
       <AppCard v-if="scanStore.scan.pages.length" class="mb-12 w-full">
         <h2 class="text-base font-medium leading-6 text-gray-900">Scanned {{ scanStore.scan.pages.length }} pages</h2>
+        <table class="divide-y divide-gray-300">
+          <thead>
+            <tr>
+              <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-0">Avg Violations/Page</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-medium text-gray-900">Avg Warnings/Page</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-medium text-gray-900">Total Pages with Violations</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-medium text-gray-900">Total Pages with Warnings</th>
+            </tr>
+          </thead>  
+          <tbody class="divide-y divide-gray-200">
+            <tr>
+              <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">{{ scanStore.scan.violation_count/scanStore.scan.violation_count_pages }}</td>
+              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ scanStore.scan.warning_count/scanStore.scan.warning_count_pages }}</td>
+              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{scanStore.scan.violation_count }}</td>
+              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{scanStore.scan.warning_count }}</td>
+            </tr>
+          </tbody>
 
+        </table>
         <div class="mt-4 flow-root">
           <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
