@@ -23,18 +23,22 @@
         <table class="divide-y divide-gray-300">
           <thead>
             <tr>
-              <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-0">Avg Violations/Page</th>
-              <th scope="col" class="px-3 py-3.5 text-left text-sm font-medium text-gray-900">Avg Warnings/Page</th>
               <th scope="col" class="px-3 py-3.5 text-left text-sm font-medium text-gray-900">Total Pages with Violations</th>
               <th scope="col" class="px-3 py-3.5 text-left text-sm font-medium text-gray-900">Total Pages with Warnings</th>
+              <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-0">Avg Violations/Page</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-medium text-gray-900">Avg Warnings/Page</th>
+              
+              
             </tr>
           </thead>  
           <tbody class="divide-y divide-gray-200">
             <tr>
+              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ scanStore.scan.violation_count_pages  }}</td>
+              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ scanStore.scan.warning_count_pages }}</td>
               <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">{{ scanStore.scan.violation_count/scanStore.scan.violation_count_pages }}</td>
               <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ scanStore.scan.warning_count/scanStore.scan.warning_count_pages }}</td>
-              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{scanStore.scan.violation_count }}</td>
-              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{scanStore.scan.warning_count }}</td>
+              
+              
             </tr>
           </tbody>
 
@@ -54,7 +58,19 @@
                   <tr v-for="page in scanStore.scan.pages" :key="page.id" @click="showPage(page.id)" class="hover:bg-gray-50 cursor-pointer">
                     <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">{{ page.title }}</td>
                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ page.results.eval_url }}</td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ page.results.rule_results.length }}</td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      <table>
+                        <tr>
+                          <th class="py-3.5 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-0">V</th>
+                          <th class="py-3.5 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-0">W</th>
+                        </tr>
+                        <tr>
+                          <td class="py-3.5 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-0">{{ page.violation_count }}</td>
+                          <td class="py-3.5 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-0">{{page.warning_count}}</td>
+                        </tr>
+                      </table>
+                       
+                    </td>
                   </tr>
                 </tbody>
               </table>
