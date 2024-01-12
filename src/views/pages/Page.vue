@@ -31,8 +31,8 @@
                   <tr v-for="result in pageStore.page.results.rule_results" :key="result.rule_id" class="hover:bg-gray-50 cursor-pointer">
                     <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">{{ result.rule_id }}</td>
                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500" >{{ result.elements_passed }}</td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500" :class="{'bg-red-100': result.elements_failure > 0}">{{ result.elements_failure }}</td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500" :class="{'bg-yellow-100': result.elements_warning > 0}">{{ result.elements_warning }}</td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500" :class="{'bg-red-100': result.elements_violation > 0}"><button @click="setActiveRule(result, 'V')">{{ result.elements_violation }}</button></td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500" :class="{'bg-yellow-100': result.elements_warning > 0}"><button @click="setActiveRule(result, 'W')">{{ result.elements_warning }}</button></td>
                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ result.elements_hidden }}</td>
                   </tr>
                 </tbody>
@@ -42,18 +42,38 @@
         </div>
       </AppCard> <!-- end users table -->
     </div>
+    <Slideout :rule="activeRule" :open="showSlideOut" @close="removeActiveRule()"></Slideout>
   </LayoutDefault>
 </template>
 
 <script setup>
 import moment from 'moment'
-import { onMounted } from 'vue'
+import { onMounted, ref, reactive } from 'vue'
 import { useRoute } from 'vue-router'
 import { usePageStore } from '@/domain/pages/store/usePageStore'
+
 import LayoutDefault from '@/app/layouts/LayoutDefault.vue'
+import Slideout from './slideout/Slideout.vue'
 
 const route = useRoute()
 const pageStore = usePageStore()
+const activeRule = reactive({
+  rule:{},
+  scope:''
+});
+const showSlideOut = ref(false);
+
+function setActiveRule(rule, scope) {
+  
+  showSlideOut.value = true;
+  activeRule.rule = rule;
+  activeRule.scope = scope;
+}
+function removeActiveRule() {
+  showSlideOut.value = false;
+  activeRule.rule = {};
+  activeRule.scope = '';
+}
 
 onMounted(() => {
   pageStore.show(route.params.scan, route.params.page)
