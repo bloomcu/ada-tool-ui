@@ -24,7 +24,7 @@
                       </div>
                     </div>
                     <div class="relative mt-6 flex-1 px-4 sm:px-6">
-                        <h2 class="text-lg font-medium leading-6 text-gray-900 mb-2">Rule ID: {{ rule.rule.rule_id }}</h2>
+                        <h2 class="text-xl font-medium leading-6 text-gray-900 mb-2">Rule ID: {{ rule.rule.rule_id }}</h2>
                         <p class="mb-2 text-red-500">{{ rule.rule.rule_summary }}</p>
                         <ul role="list" class="space-y-6" v-if="Object.keys(rule.rule).length && rule.rule.element_results.filter((el)=>{ return el.result_value_nls === rule.scope}).length">
                             <li v-for="result in rule.rule.element_results.filter((el)=>{ return el.result_value_nls === rule.scope})" class="overflow-hidden rounded-md bg-white px-6 py-4 shadow">
