@@ -28,7 +28,7 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
-                  <tr v-for="result in pageStore.page.results.rule_results" :key="result.rule_id" class="hover:bg-gray-50 cursor-pointer">
+                  <tr v-for="result in filteredResults" :key="result.rule_id" class="hover:bg-gray-50 cursor-pointer">
                     <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">{{ result.rule_id }}</td>
                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500" >{{ result.elements_passed }}</td>
                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500" :class="{'bg-red-100': result.elements_violation > 0}"><button @click="setActiveRule(result, 'V')" class="hover:bg-red-300 text-left  underline w-full">{{ result.elements_violation }}</button></td>
@@ -48,7 +48,7 @@
 
 <script setup>
 import moment from 'moment'
-import { onMounted, ref, reactive } from 'vue'
+import { onMounted, ref, reactive, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { usePageStore } from '@/domain/pages/store/usePageStore'
 
@@ -62,7 +62,9 @@ const activeRule = reactive({
   scope:''
 });
 const showSlideOut = ref(false);
-
+const filteredResults = computed(()=>{
+  return pageStore.page.results.rule_results.filter((el)=>{return el.elements_violation > 0 || el.elements_warning > 0})
+});
 function setActiveRule(rule, scope) {
   
   showSlideOut.value = true;
