@@ -13,6 +13,7 @@
       <!-- Rule results -->
       <AppCard v-if="pageStore.page.results" class="mb-12 w-full">
         <h2 class="text-base font-medium leading-6 text-gray-900">{{ pageStore.page.results.rule_results.length }} Rule Results</h2>
+        <label for="" class="text-xs"><input type="checkbox" v-model="filterResults" class="mr-1">Hide rules with no warnings/violations</label>
 
         <div class="mt-4 flow-root">
           <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -61,9 +62,18 @@ const activeRule = reactive({
   rule:{},
   scope:''
 });
+const filterResults = ref(true);
 const showSlideOut = ref(false);
+
 const filteredResults = computed(()=>{
-  return pageStore.page.results.rule_results.filter((el)=>{return el.elements_violation > 0 || el.elements_warning > 0})
+  if(filterResults.value) {
+      return pageStore.page.results.rule_results.filter((el)=>{
+      return el.elements_violation > 0 || el.elements_warning > 0
+    })
+  } else {
+    return pageStore.page.results.rule_results;
+  }
+  
 });
 function setActiveRule(rule, scope) {
   
