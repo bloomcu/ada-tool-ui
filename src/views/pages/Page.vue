@@ -13,6 +13,7 @@
       <!-- Rule results -->
       <AppCard v-if="pageStore.page.results" class="mb-12 w-full">
         <h2 class="text-base font-medium leading-6 text-gray-900">{{ pageStore.page.results.rule_results.length }} Rule Results</h2>
+        <label for="" class="text-xs"><input type="checkbox" v-model="filterResults" class="mr-1">Hide rules with no warnings/violations</label>
 
         <div class="mt-4 flow-root">
           <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -28,11 +29,11 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
-                  <tr v-for="result in pageStore.page.results.rule_results" :key="result.rule_id" class="hover:bg-gray-50 cursor-pointer">
+                  <tr v-for="result in filteredResults" :key="result.rule_id" class="hover:bg-gray-50 cursor-pointer">
                     <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">{{ result.rule_id }}</td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ result.elements_passed }}</td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ result.elements_failure }}</td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ result.elements_warning }}</td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500" >{{ result.elements_passed }}</td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500" :class="{'bg-red-100': result.elements_violation > 0}"><button @click="setActiveRule(result, 'V')" class="hover:bg-red-300 text-left  underline w-full">{{ result.elements_violation }}</button></td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500" :class="{'bg-yellow-100': result.elements_warning > 0}"><button @click="setActiveRule(result, 'W')" class="hover:bg-yellow-300 text-left  underline w-full">{{ result.elements_warning }}</button></td>
                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ result.elements_hidden }}</td>
                   </tr>
                 </tbody>
@@ -42,18 +43,49 @@
         </div>
       </AppCard> <!-- end users table -->
     </div>
+    <Slideout :rule="activeRule" :open="showSlideOut" @close="removeActiveRule()"></Slideout>
   </LayoutDefault>
 </template>
 
 <script setup>
 import moment from 'moment'
-import { onMounted } from 'vue'
+import { onMounted, ref, reactive, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { usePageStore } from '@/domain/pages/store/usePageStore'
+
 import LayoutDefault from '@/app/layouts/LayoutDefault.vue'
+import Slideout from './slideout/Slideout.vue'
 
 const route = useRoute()
 const pageStore = usePageStore()
+const activeRule = reactive({
+  rule:{},
+  scope:''
+});
+const filterResults = ref(true);
+const showSlideOut = ref(false);
+
+const filteredResults = computed(()=>{
+  if(filterResults.value) {
+      return pageStore.page.results.rule_results.filter((el)=>{
+      return el.elements_violation > 0 || el.elements_warning > 0
+    })
+  } else {
+    return pageStore.page.results.rule_results;
+  }
+  
+});
+function setActiveRule(rule, scope) {
+  
+  showSlideOut.value = true;
+  activeRule.rule = rule;
+  activeRule.scope = scope;
+}
+function removeActiveRule() {
+  showSlideOut.value = false;
+  activeRule.rule = {};
+  activeRule.scope = '';
+}
 
 onMounted(() => {
   pageStore.show(route.params.scan, route.params.page)
