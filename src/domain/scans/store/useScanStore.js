@@ -27,13 +27,19 @@ export const useScanStore = defineStore('scanStore', {
         
         async show(id) {
           const auth = useAuthStore()
-          this.isLoading = true
           
-          await ScanApi.show(auth.organization, id)
+          if (true) {
+          // TODO: Work on this
+          // if (!this.scan || this.scan.id !== id) {
+            
+            this.isLoading = true
+
+            await ScanApi.show(auth.organization, id)
             .then(response => {
               this.scan = response.data.data
               this.isLoading = false
             })
+          }
         },
         
         async checkStatus(id) {
