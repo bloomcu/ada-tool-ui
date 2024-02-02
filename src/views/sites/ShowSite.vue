@@ -21,7 +21,7 @@
                 Ran {{ moment(scan.created_at).fromNow() }}
               </p>
               <p class="mt-2 text-sm leading-5 text-gray-500">Last known status: {{ scan.status }}</p>
-              <p class="mt-1 text-sm leading-5 text-gray-500">Scanned {{ scan.pages.length }} pages</p>
+              <p class="mt-1 text-sm leading-5 text-gray-500">Scanned {{ scan.page_count }} pages</p>
 
               <RouterLink :to="{ name: 'scan', params: { scan: scan.id } }">
                 <span class="absolute inset-x-0 -top-px bottom-0" />
