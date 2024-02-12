@@ -58,7 +58,8 @@ router.beforeEach(async (to) => {
     'resetPassword',
     'styleDesignBrief',
     'sitesLaunch',
-    'scan'
+    'scan',
+    'page'
   ]
 
   const authRequired = !publicRouteNames.includes(to.name)
