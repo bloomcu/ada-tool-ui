@@ -26,6 +26,12 @@
                     <div class="relative mt-6 flex-1 px-4 sm:px-6">
                         <h2 class="text-xl font-medium leading-6 text-gray-900 mb-2">Rule ID: {{ rule.rule.rule_id }}</h2>
                         <p class="mb-2 text-red-500">{{ rule.rule.rule_summary }}</p>
+                        <div v-if="ruleLookup(rule.rule.rule_id)" class="mb-6">
+                          <app-button class="inline-block" is="a" target="_blank" rel="noopener noreferrer" :href="ruleLookup(rule.rule.rule_id)">
+                            Help Available
+                          </app-button>
+                        </div>
+                        
                         <ul role="list" class="space-y-6" v-if="Object.keys(rule.rule).length && rule.rule.element_results.filter((el)=>{ return el.result_value_nls === rule.scope}).length">
                             <li v-for="result in rule.rule.element_results.filter((el)=>{ return el.result_value_nls === rule.scope})" class="overflow-hidden rounded-md bg-white px-6 py-4 shadow">
                                 
@@ -69,13 +75,43 @@
   </template>
   
   <script setup>
-  import { ref } from 'vue'
+  import { computed, ref } from 'vue'
   import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
   import { XMarkIcon } from '@heroicons/vue/24/outline'
   const props = defineProps([
     'rule',
     'open'
   ]);
+
+  const rule_help_links = {
+    // Tables without role "presentation"
+    'TABLE_1': 'https://support.bloomcu.com/hc/en-us/articles/16905884197140-How-to-fix-the-error-Data-tables-must-have-a-name',
+    'TABLE_2': 'https://support.bloomcu.com/hc/en-us/articles/16905884197140-How-to-fix-the-error-Data-tables-must-have-a-name',
+    // unique sibling headings
+    'HEADING_3' :'https://support.bloomcu.com/hc/en-us/articles/16905860032916-How-to-Fix-the-error-Sibling-headings-must-be-unique',
+    // unique link text
+    'LINK_2' :' https://support.bloomcu.com/hc/en-us/articles/16905884219412-How-to-fix-error-Link-Text-Should-be-Unique',
+    // headings out or order
+    'HEADING_5': 'https://support.bloomcu.com/hc/en-us/articles/16905875239700-How-to-fix-the-error-Improperly-Nested-Headings',
+    'HEADING_8' : 'https://support.bloomcu.com/hc/en-us/articles/16905875239700-How-to-fix-the-error-Improperly-Nested-Headings',
+    
+    // IFrames without titles
+    'FRAME_2' : 'https://support.bloomcu.com/hc/en-us/articles/16905875275668-How-to-fix-the-error-Iframe-must-have-accessible-name',
+    'COLOR_1' :'/test'
+  }
+  /**
+   * 
+   * @param {*} rule_id 
+   * @description lookup rules that we have self-help docs for and return the link
+   * @todo Make this rule list dynamic and backend editable
+   */
+  function ruleLookup(rule_id) {
+    if(Object.hasOwn(rule_help_links, rule_id)) {
+      return rule_help_links[rule_id];
+    }
+    return false;
+  }
+
   const emit = defineEmits();
 
   function handleDialogClose() {
