@@ -14,6 +14,7 @@
 
       <div class="flex flex-row items-start gap-x-6">
         <!-- Conditional import button -->
+         
         <AppButton v-if="scanStore.scan.status == 'SUCCEEDED' && !scanStore.scan.pages.length" @click="importDataset(scanStore.scan.id)" :loading="isImporting">
           Import Results
         </AppButton>
@@ -62,7 +63,7 @@
                     <tr v-for="page in scanStore.scan.pages" :key="page.id" class="hover:bg-gray-50 cursor-pointer " :class="{'even:bg-gray-100': avgViolationsPerPage > page.violation_count && avgWarningsPerPage > page.warning_count,'bg-red-100':	avgViolationsPerPage < page.violation_count, 'bg-yellow-100':avgWarningsPerPage < page.warning_count}">
                       <td class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 truncate max-w-md">{{ page.title }}</td>
                       <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 truncate max-w-md">
-                        <!-- {{ page.results.eval_url }} -->
+                        {{ page.eval_url }}
                       </td>
                       <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         <table>
@@ -78,6 +79,10 @@
                         
                       </td>
                       <td class="px-3 py-4 text-sm">
+                        <AppButton v-if="page.rescan && (page.rescan.status === 'SUCCEEDED' || page.rescan.status === 'READY')" @click="importPageDataset(page.id)">Import</AppButton>
+                        <AppButton v-else-if="page.rescan" @click="checkPageScanStatus(page.id, page.rescan.id)">Check Status</AppButton>
+                        
+                        <AppButton v-else @click="rescanPage(page)">Rescan</AppButton>
                         <AppButton @click="showPage(page.id)">View</AppButton>
                         
                       </td>
@@ -156,6 +161,29 @@ async function importDataset(scanId) {
 
 async function showPage(pageId) {
   router.push({ name: 'page', params: { scan: route.params.scan, page: pageId } })
+}
+async function rescanPage(page) {
+  const page_id = page.id;
+  const site_id = scanStore.scan.site.id;
+  const scan_id = scanStore.scan.id;
+  
+  
+  scanStore.rescanPage(site_id, scan_id, page_id);
+  // console.log(organization_id, site_id, scan_id, page_id);
+}
+
+async function importPageDataset(page_id) {
+  
+  const site_id = scanStore.scan.site.id;
+  const scan_id = scanStore.scan.id;
+  scanStore.importPageDataset(site_id, scan_id, page_id)
+  
+
+}
+async function checkPageScanStatus(page_id, scan_id) {
+  
+  scanStore.checkPageScanStatus(page_id, scan_id);
+
 }
 
 onMounted(() => {
