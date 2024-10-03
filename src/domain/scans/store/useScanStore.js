@@ -74,6 +74,37 @@ export const useScanStore = defineStore('scanStore', {
               this.isLoading = false
             })
         },
+
+        async rescanPage(site_id, scan_id, page_id) {
+          const auth = useAuthStore();
+          await ScanApi.rescanPage(auth.organization, site_id, scan_id, page_id)
+          .then(response => {
+            // add rescan to page
+            this.scan.pages.find(el=>el.id == page_id).rescan = response.data.data;
+            
+          });
+
+        },
+
+        async importPageDataset(site_id, scan_id, page_id) {
+          const auth = useAuthStore();
+          await ScanApi.importPageDataset(auth.organization, site_id, scan_id, page_id)
+          .then(() => {
+            let scanned_page = this.scan.pages.find(el=>el.id == page_id);
+            scanned_page.rescan = null;
+          })
+        },
+
+        async checkPageScanStatus(page_id, scan_id) {
+          const auth = useAuthStore();
+          await ScanApi.checkPageScanStatus(auth.organization,scan_id)
+          .then(response => {
+            
+            let scanned_page = this.scan.pages.find(el=>el.id == page_id);
+            scanned_page.rescan.status = response.data.data;
+            
+          })
+        }
     }
 })
 

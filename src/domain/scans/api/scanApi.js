@@ -48,8 +48,24 @@ const scanApi = {
      * @return promise
      */
     importDataset(organization, id) {
+      
       return HttpClient.get(`/${organization}/scans/${id}/import`)
     },
+
+    rescanPage(organization, site_id, scan_id, page_id) {
+      console.log('Inside rescanPage:', { organization, site_id, scan_id, page_id });
+      return HttpClient.post(`/${organization}/sites/${site_id}/scans/${scan_id}/page/${page_id}/scan`);
+    },
+
+    importPageDataset(organization, site_id, scan_id, page_id) {
+      console.log('importing');
+      return HttpClient.get(`/${organization}/sites/${site_id}/scans/${scan_id}/page/${page_id}/rescan/import`);
+    },
+    checkPageScanStatus(organization, id) {
+      // console.log('scan_id', id);
+      // return 'test';
+      return HttpClient.get(`/${organization}/scans/${id}/status`)
+    }
 }
 
 export { scanApi }
