@@ -79,11 +79,15 @@
                         
                       </td>
                       <td class="px-3 py-4 text-sm text-right">
-                        <AppButton v-if="page.rescan && (page.rescan.status === 'SUCCEEDED' || page.rescan.status === 'READY')" @click="importPageDataset(page.id)">Import</AppButton>
-                        <AppButton v-else-if="page.rescan" @click="checkPageScanStatus(page.id, page.rescan.id)">Check Status</AppButton>
+                        <div class="grid grid-flow-col auto-cols-auto gap-2">
+                            <div v-if="authStore.user">
+                              <AppButton v-if="page.rescan && (page.rescan.status === 'SUCCEEDED' || page.rescan.status === 'READY')" @click="importPageDataset(page.id)">Import</AppButton>
+                              <AppButton v-else-if="page.rescan" @click="checkPageScanStatus(page.id, page.rescan.id)">Check Status</AppButton>
+                              <AppButton v-else @click="rescanPage(page)">Rescan</AppButton>  
+                            </div>
+                            <AppButton @click="showPage(page.id)">View</AppButton>
+                        </div>
                         
-                        <AppButton v-else @click="rescanPage(page)">Rescan</AppButton>
-                        <AppButton @click="showPage(page.id)">View</AppButton>
                         
                       </td>
                     </tr>
@@ -136,12 +140,15 @@ import moment from 'moment'
 import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useScanStore } from '@/domain/scans/store/useScanStore'
+import { useAuthStore } from '@/domain/base/auth/store/useAuthStore'
 import LayoutDefault from '@/app/layouts/LayoutDefault.vue'
 
 const isImporting = ref(false)
 const router = useRouter()
 const route = useRoute()
 const scanStore = useScanStore()
+const authStore = useAuthStore()
+
 
 const avgViolationsPerPage = computed(()=>{
   return scanStore.scan.violation_count/scanStore.scan.violation_count_pages
