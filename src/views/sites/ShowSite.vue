@@ -46,7 +46,7 @@
       </div>
 
     <!-- Modal -->
-    <EditSiteModal/>
+    <EditSiteModal v-on="{'deleted': () => router.push({ name: 'sites' })}"/>
   </LayoutDefault>
 </template>
 
@@ -56,9 +56,12 @@ import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useSiteStore } from '@/domain/sites/store/useSiteStore'
 import { useScanStore } from '@/domain/scans/store/useScanStore'
+import { useRouter } from 'vue-router';
+
 import LayoutDefault from '@/app/layouts/LayoutDefault.vue'
 import EditSiteModal from '@/views/sites/modals/EditSiteModal.vue'
 
+const router = useRouter();
 const route = useRoute()
 const siteStore = useSiteStore()
 const scanStore = useScanStore()
