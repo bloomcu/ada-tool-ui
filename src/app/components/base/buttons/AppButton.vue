@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, warn } from 'vue'
 
 const props = defineProps({
   to: {
@@ -63,7 +63,8 @@ const variantClasses = {
   primary: 'text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm',
   secondary: 'text-indigo-600 bg-indigo-100 hover:bg-indigo-200 shadow-sm',
   tertiary: 'text-gray-900 bg-white hover:bg-gray-50 ring-1 ring-inset ring-gray-300 shadow-sm',
-  link: 'text-indigo-600 hover:text-indigo-900'
+  link: 'text-indigo-600 hover:text-indigo-900',
+  warning: 'text-white bg-red-600 hover:bg-red-700 shadow-sm'
 }
 
 const sizeClasses = {
