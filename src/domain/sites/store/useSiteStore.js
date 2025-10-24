@@ -61,11 +61,11 @@ export const useSiteStore = defineStore('siteStore', {
             })
         },
         
-        destroy(id) {
+        async destroy(id) {
           const auth = useAuthStore()
           this.isLoading = true
           
-          SiteApi.destroy(auth.organization, id)
+          await SiteApi.destroy(auth.organization, id)
             .then(response => {
               this.sites = this.sites.filter((site) => site.id !== id)
               this.isLoading = false
