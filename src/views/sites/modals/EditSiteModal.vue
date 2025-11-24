@@ -10,9 +10,14 @@
     </div>
     
     <form action="#" @submit.prevent="update()" class="flex flex-col gap-3">
-      
+      <ScanFrequencySelect v-model="siteStore.site.scan_schedule" />
       <AppInput v-model="siteStore.site.title" label="Title" placeholder="Primary Website" required />
       <AppInput v-model="siteStore.site.domain" label="Domain" placeholder="acmecu.com" required />
+      <AppInput
+        v-model="siteStore.site.scan_notification_emails"
+        label="Notification emails"
+        placeholder="accessibility@example.com, dev@example.com"
+      />
       <AppButton :loading="siteStore.loading" class="w-full">Update</AppButton>
     </form>
   </AppModal>
@@ -20,6 +25,7 @@
 
 <script setup>
 import { useSiteStore } from '@/domain/sites/store/useSiteStore'
+import ScanFrequencySelect from '@/app/components/site/forms/ScanFrequencySelect.vue'
 
 const emit = defineEmits(['deleted']);
 

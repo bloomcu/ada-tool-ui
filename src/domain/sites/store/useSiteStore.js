@@ -46,6 +46,7 @@ export const useSiteStore = defineStore('siteStore', {
           SiteApi.show(auth.organization, id)
             .then(response => {
               this.site = response.data.data
+              this.site.scan_notification_emails = this.site.scan_notification_emails || ''
               this.isLoading = false
             })
         },
@@ -56,7 +57,8 @@ export const useSiteStore = defineStore('siteStore', {
           
           await SiteApi.update(auth.organization, this.site.id, this.site)
             .then(response => {
-              console.log('Site successfully updated')
+              this.site = response.data.data
+              this.site.scan_notification_emails = this.site.scan_notification_emails || ''
               this.isLoading = false
             })
         },
