@@ -57,8 +57,8 @@ export const useSiteStore = defineStore('siteStore', {
           
           await SiteApi.update(auth.organization, this.site.id, this.site)
             .then(response => {
-              this.site = response.data.data
-              this.site.scan_notification_emails = this.site.scan_notification_emails || ''
+              // this.site = response.data.data
+              // this.site.scan_notification_emails = this.site.scan_notification_emails || ''
               this.isLoading = false
             })
         },
