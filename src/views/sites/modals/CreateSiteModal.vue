@@ -9,6 +9,11 @@
       <ScanFrequencySelect v-model="newSite.scan_schedule" />
       <AppInput v-model="newSite.title" label="Title" placeholder="Primary Website" required />
       <AppInput v-model="newSite.domain" label="Domain" placeholder="acmecu.com" required />
+      <AppInput
+        v-model="newSite.scan_notification_emails"
+        label="Notification emails"
+        placeholder="accessibility@example.com, dev@example.com"
+      />
       <AppButton :loading="siteStore.loading" class="w-full">Create</AppButton>
     </form>
   </AppModal>
@@ -25,6 +30,7 @@ const newSite = ref({
   title: '',
   url: 'https://',
   scan_schedule: 'manual',
+  scan_notification_emails: '',
 })
 
 function create() {
@@ -36,6 +42,7 @@ function create() {
         title: '',
         url: 'https://',
         scan_schedule: 'manual',
+        scan_notification_emails: '',
       }
     })
 }
