@@ -85,19 +85,19 @@
 
   const rule_help_links = {
     // Tables without role "presentation"
-    'TABLE_1': 'https://support.bloomcu.com/hc/en-us/articles/16905884197140-How-to-fix-the-error-Data-tables-must-have-a-name',
-    'TABLE_2': 'https://support.bloomcu.com/hc/en-us/articles/16905884197140-How-to-fix-the-error-Data-tables-must-have-a-name',
+    'TABLE_1': 'https://support.metrifi.com/hc/en-us/articles/42348524722452-How-to-fix-the-error-Data-tables-must-have-a-name',
+    'TABLE_2': 'https://support.metrifi.com/hc/en-us/articles/42348524722452-How-to-fix-the-error-Data-tables-must-have-a-name',
     // unique sibling headings
-    'HEADING_3' :'https://support.bloomcu.com/hc/en-us/articles/16905860032916-How-to-Fix-the-error-Sibling-headings-must-be-unique',
+    'HEADING_3' :'https://support.metrifi.com/hc/en-us/articles/42348572297236-How-to-Fix-the-error-Sibling-headings-must-be-unique',
     // unique link text
-    'LINK_2' :' https://support.bloomcu.com/hc/en-us/articles/16905884219412-How-to-fix-error-Link-Text-Should-be-Unique',
+    'LINK_2' :'https://support.metrifi.com/hc/en-us/articles/42348562296468-How-to-fix-error-Link-Text-Should-be-Unique',
     // headings out or order
-    'HEADING_5': 'https://support.bloomcu.com/hc/en-us/articles/16905875239700-How-to-fix-the-error-Improperly-Nested-Headings',
-    'HEADING_8' : 'https://support.bloomcu.com/hc/en-us/articles/16905875239700-How-to-fix-the-error-Improperly-Nested-Headings',
+    'HEADING_5': 'https://support.metrifi.com/hc/en-us/articles/42348547257748-How-to-fix-the-error-Improperly-Nested-Headings',
+    'HEADING_8' : 'https://support.metrifi.com/hc/en-us/articles/42348547257748-How-to-fix-the-error-Improperly-Nested-Headings',
     
     // IFrames without titles
-    'FRAME_2' : 'https://support.bloomcu.com/hc/en-us/articles/16905875275668-How-to-fix-the-error-Iframe-must-have-accessible-name',
-    'COLOR_1' :'/test'
+    'FRAME_2' : 'https://support.metrifi.com/hc/en-us/articles/42348541912596-How-to-fix-the-error-Iframe-must-have-accessible-name',
+    
   }
   /**
    * 
