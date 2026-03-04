@@ -14,6 +14,13 @@
         label="Notification emails"
         placeholder="accessibility@example.com, dev@example.com"
       />
+      <div>
+          <label for="include_3pi" class="block text-sm font-medium leading-6 text-gray-900 mb-2">Include 3rd Party Integrations?</label>
+         <select v-model="newSite.include_3pi" class="rounded-md border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500 w-full " id="include_3pi">
+          <option :value="1">Include 3PI</option>
+          <option :value="0">Exclude 3PI</option>
+        </select>
+      </div>
       <AppButton :loading="siteStore.loading" class="w-full">Create</AppButton>
     </form>
   </AppModal>
@@ -40,6 +47,7 @@ function create() {
       
       newSite.value = {
         title: '',
+        include_3pi: 1,
         url: 'https://',
         scan_schedule: 'manual',
         scan_notification_emails: '',

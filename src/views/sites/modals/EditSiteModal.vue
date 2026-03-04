@@ -18,6 +18,10 @@
         label="Notification emails"
         placeholder="accessibility@example.com, dev@example.com"
       />
+       <select v-model="siteStore.site.include_3pi" class="rounded-md border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500">
+        <option :value="1">Include 3PI</option>
+        <option :value="0">Exclude 3PI</option>
+      </select>
       <AppButton :loading="siteStore.loading" class="w-full">Update</AppButton>
     </form>
   </AppModal>
