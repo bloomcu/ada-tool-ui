@@ -52,6 +52,16 @@ const scanApi = {
       return HttpClient.get(`/${organization}/scans/${id}/import`)
     },
 
+    /**
+     * Export the issues of a scan as a JSON file
+     *
+     * @param Integer id [Id of the scan you want to export issues from]
+     * @return promise
+     */
+    exportIssues(organization, id) {
+      return HttpClient.get(`/${organization}/scans/${id}/issues/export`, { responseType: 'blob' })
+    },
+
     rescanPage(organization, site_id, scan_id, page_id) {
       console.log('Inside rescanPage:', { organization, site_id, scan_id, page_id });
       return HttpClient.post(`/${organization}/sites/${site_id}/scans/${scan_id}/page/${page_id}/scan`);

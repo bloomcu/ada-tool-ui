@@ -9,7 +9,12 @@
           </h1>
           <p class="leading-6 text-gray-400 mt-2">Status: {{ scanStore.scan.status }}</p>
         </div>
-        <AppButton :to="{ name: 'scans' }" variant="secondary">Back</AppButton>
+        <div class="flex items-center gap-x-3">
+          <AppButton v-if="authStore.user" @click="exportIssues" :loading="scanStore.isExporting">
+            Export Report
+          </AppButton>
+          <AppButton :to="{ name: 'scans' }" variant="secondary">Back</AppButton>
+        </div>
       </AppHeader>
 
       <div class="flex flex-row items-start gap-x-6">
@@ -164,6 +169,10 @@ async function importDataset(scanId) {
     isImporting.value = false
     scanStore.show(route.params.scan)
   })
+}
+
+async function exportIssues() {
+  await scanStore.exportIssues(scanStore.scan.id)
 }
 
 async function showPage(pageId) {
