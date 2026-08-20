@@ -3,11 +3,38 @@ import { scanApi as ScanApi } from '@/domain/scans/api/scanApi'
 
 import { useAuthStore } from '@/domain/base/auth/store/useAuthStore'
 
+/**
+ * Pull the filename out of a response's Content-Disposition header
+ * Falls back when the header is absent or not exposed by CORS
+ */
+function filenameFromResponse(response, fallback) {
+  const disposition = response.headers?.['content-disposition']
+  const match = disposition?.match(/filename\*?=(?:UTF-8'')?"?([^";]+)"?/i)
+
+  return match ? decodeURIComponent(match[1]) : fallback
+}
+
+/**
+ * Hand a blob to the browser as a file download
+ */
+function downloadBlob(blob, filename) {
+  const url = window.URL.createObjectURL(blob)
+  const link = document.createElement('a')
+
+  link.href = url
+  link.download = filename
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  window.URL.revokeObjectURL(url)
+}
+
 export const useScanStore = defineStore('scanStore', {
     state: () => ({
         scans: [],
         scan: null,
         isLoading: true,
+        isExporting: false,
     }),
     
     actions: {
@@ -72,6 +99,22 @@ export const useScanStore = defineStore('scanStore', {
             .then(response => {
               this.scan.dataset = response.data.data
               this.isLoading = false
+            })
+        },
+
+        async exportIssues(id) {
+          const auth = useAuthStore()
+          this.isExporting = true
+
+          await ScanApi.exportIssues(auth.organization, id)
+            .then(response => {
+              downloadBlob(response.data, filenameFromResponse(response, `scan-${id}-issues.json`))
+            })
+            .catch(error => {
+              console.log('Error exporting issues', error)
+            })
+            .finally(() => {
+              this.isExporting = false
             })
         },
 
