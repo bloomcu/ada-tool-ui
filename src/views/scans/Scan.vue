@@ -66,7 +66,19 @@
                   </thead>
                   <tbody class="divide-y divide-gray-200">
                     <tr v-for="page in scanStore.scan.pages" :key="page.id" class="hover:bg-gray-50 cursor-pointer " :class="{'even:bg-gray-100': avgViolationsPerPage > page.violation_count && avgWarningsPerPage > page.warning_count,'bg-red-100':	avgViolationsPerPage < page.violation_count, 'bg-yellow-100':avgWarningsPerPage < page.warning_count}">
-                      <td class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 truncate max-w-md">{{ page.title }}</td>
+                      <td class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 max-w-md">
+                        <div class="truncate">{{ page.title }}</div>
+
+                        <!-- Page has failing rules that are usually editable in a CMS -->
+                        <span
+                          v-if="page.customer_reviewable"
+                          title="This page has heading, link, image, or table issues that are usually editable in your CMS."
+                          class="mt-1 inline-flex items-center gap-x-1 rounded-md bg-indigo-100 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/20"
+                        >
+                          <PencilSquareIcon class="h-3.5 w-3.5" aria-hidden="true"/>
+                          Review first
+                        </span>
+                      </td>
                       <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 truncate max-w-md">
                           <!-- <a :href="page.eval_url" target="_blank">{{ page.eval_url }}</a> -->
                       </td>
@@ -144,6 +156,7 @@
 import moment from 'moment'
 import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { PencilSquareIcon } from '@heroicons/vue/20/solid'
 import { useScanStore } from '@/domain/scans/store/useScanStore'
 import { useAuthStore } from '@/domain/base/auth/store/useAuthStore'
 import LayoutDefault from '@/app/layouts/LayoutDefault.vue'
