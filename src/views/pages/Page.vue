@@ -43,7 +43,7 @@
                           class="inline-flex items-center gap-x-1.5 rounded-full bg-white px-2 py-0.5 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-700/40"
                         >
                           <svg class="h-1.5 w-1.5 fill-yellow-600" viewBox="0 0 6 6" aria-hidden="true"><circle cx="3" cy="3" r="3"/></svg>
-                          Review first
+                          <span><strong>Metrifi Client:</strong> review first</span>
                         </span>
                       </div>
                     </td>
