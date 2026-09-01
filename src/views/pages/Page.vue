@@ -29,11 +29,50 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
-                  <tr v-for="result in filteredResults" :key="result.rule_id" class="hover:bg-gray-50 cursor-pointer">
-                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">{{ result.rule_id }}</td>
+                  <tr v-for="result in filteredResults" :key="result.rule_id" class="hover:bg-gray-50">
+                    <td class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+                      <div class="flex items-center gap-x-2 whitespace-nowrap">
+                        {{ result.rule_id }}
+
+                        <!-- Failing rule that is often editable in a CMS.
+                             Deliberately a flat, dotted tag: the filled chips in this table are
+                             buttons, so a label must not borrow their look. -->
+                        <span
+                          v-if="result.customer_reviewable"
+                          title="This issue is often resolvable by making content changes in your CMS."
+                          class="inline-flex items-center gap-x-1.5 rounded-full bg-white px-2 py-0.5 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-700/40"
+                        >
+                          <svg class="h-1.5 w-1.5 fill-yellow-600" viewBox="0 0 6 6" aria-hidden="true"><circle cx="3" cy="3" r="3"/></svg>
+                          Review first
+                        </span>
+                      </div>
+                    </td>
                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500" >{{ result.elements_passed }}</td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500" :class="{'bg-red-100': result.elements_violation > 0}"><button @click="setActiveRule(result, 'V')" class="hover:bg-red-300 text-left  underline w-full">{{ result.elements_violation }}</button></td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500" :class="{'bg-yellow-100': result.elements_warning > 0}"><button @click="setActiveRule(result, 'W')" class="hover:bg-yellow-300 text-left  underline w-full">{{ result.elements_warning }}</button></td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      <!-- Only offer the slideout when there is something in it to see -->
+                      <button
+                        v-if="result.elements_violation > 0"
+                        @click="setActiveRule(result, 'V')"
+                        :aria-label="`View ${result.elements_violation} violating elements for ${result.rule_id}`"
+                        class="inline-flex items-center gap-x-1.5 rounded-md bg-red-200 px-2.5 py-1 font-medium text-red-900 ring-1 ring-inset ring-red-700/20 hover:bg-red-300 active:translate-y-px focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700"
+                      >
+                        {{ result.elements_violation }}
+                        <MagnifyingGlassIcon class="h-3.5 w-3.5" aria-hidden="true"/>
+                      </button>
+                      <span v-else>{{ result.elements_violation }}</span>
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      <button
+                        v-if="result.elements_warning > 0"
+                        @click="setActiveRule(result, 'W')"
+                        :aria-label="`View ${result.elements_warning} warning elements for ${result.rule_id}`"
+                        class="inline-flex items-center gap-x-1.5 rounded-md bg-yellow-200 px-2.5 py-1 font-medium text-yellow-900 ring-1 ring-inset ring-yellow-700/20 hover:bg-yellow-300 active:translate-y-px focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-700"
+                      >
+                        {{ result.elements_warning }}
+                        <MagnifyingGlassIcon class="h-3.5 w-3.5" aria-hidden="true"/>
+                      </button>
+                      <span v-else>{{ result.elements_warning }}</span>
+                    </td>
                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ result.elements_hidden }}</td>
                   </tr>
                 </tbody>
@@ -51,6 +90,7 @@
 import moment from 'moment'
 import { onMounted, ref, reactive, computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { MagnifyingGlassIcon } from '@heroicons/vue/20/solid'
 import { usePageStore } from '@/domain/pages/store/usePageStore'
 
 import LayoutDefault from '@/app/layouts/LayoutDefault.vue'
