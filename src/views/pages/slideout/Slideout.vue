@@ -27,8 +27,10 @@
                         <h2 class="text-xl font-medium leading-6 text-gray-900 mb-2">Rule ID: {{ rule.rule.rule_id }}</h2>
                         <p class="mb-2 text-red-500">{{ rule.rule.rule_summary }}</p>
                         <div v-if="ruleLookup(rule.rule.rule_id)" class="mb-6">
-                          <app-button class="inline-block" is="a" target="_blank" rel="noopener noreferrer" :href="ruleLookup(rule.rule.rule_id)">
-                            Help Available
+                          <app-button class="inline-flex items-center gap-x-1.5" is="a" target="_blank" rel="noopener noreferrer" :href="ruleLookup(rule.rule.rule_id)">
+                            How to fix this issue
+                            <span class="sr-only">(opens in a new tab)</span>
+                            <ArrowTopRightOnSquareIcon class="h-4 w-4" aria-hidden="true"/>
                           </app-button>
                         </div>
                         
@@ -75,9 +77,9 @@
   </template>
   
   <script setup>
-  import { computed, ref } from 'vue'
   import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
   import { XMarkIcon } from '@heroicons/vue/24/outline'
+  import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/20/solid'
   const props = defineProps([
     'rule',
     'open'

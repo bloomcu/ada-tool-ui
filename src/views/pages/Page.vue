@@ -87,7 +87,6 @@
 </template>
 
 <script setup>
-import moment from 'moment'
 import { onMounted, ref, reactive, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { MagnifyingGlassIcon } from '@heroicons/vue/20/solid'
