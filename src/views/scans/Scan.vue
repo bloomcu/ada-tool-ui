@@ -51,6 +51,22 @@
             </tbody>
 
           </table>
+
+          <!-- What to do with the pages tagged "Review first" -->
+          <div v-if="reviewablePageCount" class="mt-6 rounded-md bg-yellow-50 p-4 ring-1 ring-inset ring-yellow-600/20">
+            <div class="flex gap-x-3">
+              <InformationCircleIcon class="h-5 w-5 flex-none text-yellow-600" aria-hidden="true"/>
+              <div class="text-sm">
+                <h3 class="font-medium text-yellow-900">
+                  Start with the {{ reviewablePageCount }} page{{ reviewablePageCount === 1 ? '' : 's' }} tagged "Review first"
+                </h3>
+                <p class="mt-1 text-yellow-800">
+                  These pages have heading, link, image, or table issues, which you can often resolve yourself by making changes in the CMS.
+                </p>
+              </div>
+            </div>
+          </div>
+
           <div class="mt-4 flow-root">
             <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 sm:px-6 lg:px-8">
               <div class="">
@@ -72,8 +88,8 @@
                         <!-- Page has failing rules that are usually editable in a CMS -->
                         <span
                           v-if="page.customer_reviewable"
-                          title="This page has heading, link, image, or table issues that are usually editable in your CMS."
-                          class="mt-1 inline-flex items-center gap-x-1 rounded-md bg-indigo-100 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/20"
+                          title="This page has heading, link, image, or table issues, which are often editable in your CMS."
+                          class="mt-1 inline-flex items-center gap-x-1 rounded-md bg-yellow-300 px-2 py-1 text-xs font-medium text-yellow-900 ring-1 ring-inset ring-yellow-600/30"
                         >
                           <PencilSquareIcon class="h-3.5 w-3.5" aria-hidden="true"/>
                           Review first
@@ -156,7 +172,7 @@
 import moment from 'moment'
 import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { PencilSquareIcon } from '@heroicons/vue/20/solid'
+import { InformationCircleIcon, PencilSquareIcon } from '@heroicons/vue/20/solid'
 import { useScanStore } from '@/domain/scans/store/useScanStore'
 import { useAuthStore } from '@/domain/base/auth/store/useAuthStore'
 import LayoutDefault from '@/app/layouts/LayoutDefault.vue'
@@ -173,6 +189,9 @@ const avgViolationsPerPage = computed(()=>{
 })
 const avgWarningsPerPage = computed(()=>{
   return scanStore.scan.warning_count/scanStore.scan.warning_count_pages
+})
+const reviewablePageCount = computed(()=>{
+  return scanStore.scan.pages.filter(page => page.customer_reviewable).length
 })
 
 async function importDataset(scanId) {
