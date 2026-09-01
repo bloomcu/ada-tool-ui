@@ -52,13 +52,13 @@
 
           </table>
 
-          <!-- What to do with the pages tagged "Review first" -->
+          <!-- What to do with the pages tagged "Metrifi Client: review first" -->
           <div v-if="reviewablePageCount" class="mt-6 rounded-md bg-yellow-50 p-4 ring-1 ring-inset ring-yellow-600/20">
             <div class="flex gap-x-3">
               <InformationCircleIcon class="h-5 w-5 flex-none text-yellow-600" aria-hidden="true"/>
               <div class="text-sm">
                 <h3 class="font-medium text-yellow-900">
-                  Start with the {{ reviewablePageCount }} page{{ reviewablePageCount === 1 ? '' : 's' }} tagged "Review first"
+                  Start with the {{ reviewablePageCount }} page{{ reviewablePageCount === 1 ? '' : 's' }} tagged for client review
                 </h3>
                 <p class="mt-1 text-yellow-800">
                   These pages have heading, link, image, or table issues, which you can often resolve yourself by making changes in the CMS.
@@ -94,7 +94,7 @@
                           class="mt-1 inline-flex items-center gap-x-1.5 rounded-full bg-white px-2 py-0.5 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-700/40"
                         >
                           <svg class="h-1.5 w-1.5 fill-yellow-600" viewBox="0 0 6 6" aria-hidden="true"><circle cx="3" cy="3" r="3"/></svg>
-                          Review first
+                          <span><strong>Metrifi Client:</strong> review first</span>
                         </span>
                       </td>
                       <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 truncate max-w-md">

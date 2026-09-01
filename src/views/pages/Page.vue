@@ -15,6 +15,38 @@
         <h2 class="text-base font-medium leading-6 text-gray-900">{{ pageStore.page.results.rule_results.length }} Rule Results</h2>
         <label for="" class="text-xs"><input type="checkbox" v-model="filterResults" class="mr-1">Hide rules with no warnings/violations</label>
 
+        <!-- How to read this table. No counts here on purpose: a number that can drift
+             out of step with the rows is worse than no number. -->
+        <div class="mt-6 rounded-md bg-yellow-50 p-4 ring-1 ring-inset ring-yellow-600/20">
+          <div class="flex gap-x-3">
+            <InformationCircleIcon class="h-5 w-5 flex-none text-yellow-600" aria-hidden="true"/>
+            <div class="text-sm">
+              <h3 class="font-medium text-yellow-900">How to read this table</h3>
+              <p v-if="hasClientReviewableResults" class="mt-1 text-yellow-800">
+                Start with lines marked "Metrifi Client: review first." They are heading, link, image, or table issues, which you can often resolve
+                yourself by making changes in the CMS.
+              </p>
+              <!-- Violation/warning is AInspector's required-vs-recommended split, not a severity
+                   scale. See opena11y.github.io/evaluation-library/concepts.html
+                   The gap after each dt is mr-1, not a source-level space: Vue's whitespace
+                   condensing drops the newline between dt and dd. -->
+              <dl class="mt-2 space-y-1 text-yellow-800">
+                <div>
+                  <dt class="inline font-medium mr-1">Violations</dt>
+                  <dd class="inline">are failures of a required rule &mdash; a WCAG conformance requirement. Resolve these
+                    wherever possible.</dd>
+                </div>
+                <div>
+                  <dt class="inline font-medium mr-1">Warnings</dt>
+                  <dd class="inline">are failures of a recommended rule &mdash; a best practice rather than a strict WCAG
+                    requirement. Still worth resolving where you can: they can cause confusion and introduce on-page SEO
+                    issues.</dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+        </div>
+
         <div class="mt-4 flow-root">
           <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
@@ -23,8 +55,8 @@
                   <tr>
                     <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-0">Rule Id</th>
                     <th scope="col" class="px-3 py-3.5 text-left text-sm font-medium text-gray-900">Pass</th>
-                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-medium text-gray-900">Fail</th>
-                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-medium text-gray-900">Warning</th>
+                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-medium text-gray-900">Violations</th>
+                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-medium text-gray-900">Warnings</th>
                     <th scope="col" class="px-3 py-3.5 text-left text-sm font-medium text-gray-900">Hidden</th>
                   </tr>
                 </thead>
@@ -43,7 +75,7 @@
                           class="inline-flex items-center gap-x-1.5 rounded-full bg-white px-2 py-0.5 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-700/40"
                         >
                           <svg class="h-1.5 w-1.5 fill-yellow-600" viewBox="0 0 6 6" aria-hidden="true"><circle cx="3" cy="3" r="3"/></svg>
-                          Review first
+                          <span><strong>Metrifi Client:</strong> review first</span>
                         </span>
                       </div>
                     </td>
@@ -87,10 +119,9 @@
 </template>
 
 <script setup>
-import moment from 'moment'
 import { onMounted, ref, reactive, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { MagnifyingGlassIcon } from '@heroicons/vue/20/solid'
+import { InformationCircleIcon, MagnifyingGlassIcon } from '@heroicons/vue/20/solid'
 import { usePageStore } from '@/domain/pages/store/usePageStore'
 
 import LayoutDefault from '@/app/layouts/LayoutDefault.vue'
@@ -115,6 +146,11 @@ const filteredResults = computed(()=>{
   }
   
 });
+
+const hasClientReviewableResults = computed(()=>{
+  return pageStore.page.results.rule_results.some(el => el.customer_reviewable)
+});
+
 function setActiveRule(rule, scope) {
   
   showSlideOut.value = true;
