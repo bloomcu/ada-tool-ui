@@ -35,6 +35,7 @@ export const useScanStore = defineStore('scanStore', {
         scan: null,
         isLoading: true,
         isExporting: false,
+        importMessage: null,
     }),
     
     actions: {
@@ -91,14 +92,37 @@ export const useScanStore = defineStore('scanStore', {
             })
         },
 
+        /**
+         * Re-fetch the scan without the loading skeleton — used to follow a queued import
+         */
+        async refresh(id) {
+          const auth = useAuthStore()
+
+          await ScanApi.show(auth.organization, id)
+            .then(response => {
+              this.scan = response.data.data
+            })
+        },
+
+        /**
+         * Queue the dataset import. The API answers 202 straight away (the import runs in the
+         * background), or 409 when an import is already running or the scan was already imported
+         */
         async importDataset(id) {
           const auth = useAuthStore()
-          this.isLoading = true
-          
+          this.importMessage = null
+
           await ScanApi.importDataset(auth.organization, id)
             .then(response => {
-              this.scan.dataset = response.data.data
-              this.isLoading = false
+              this.scan.import_status = response.data.data.import_status
+            })
+            .catch(error => {
+              if (error.response?.status === 409) {
+                this.importMessage = error.response.data.message
+                this.scan.import_status = error.response.data.data?.import_status ?? this.scan.import_status
+              } else {
+                this.importMessage = 'The import could not be started. Please try again.'
+              }
             })
         },
 
@@ -131,10 +155,17 @@ export const useScanStore = defineStore('scanStore', {
 
         async importPageDataset(site_id, scan_id, page_id) {
           const auth = useAuthStore();
+          this.importMessage = null
           await ScanApi.importPageDataset(auth.organization, site_id, scan_id, page_id)
           .then(() => {
             let scanned_page = this.scan.pages.find(el=>el.id == page_id);
             scanned_page.rescan = null;
+          })
+          .catch(error => {
+            // 409: a full import of this scan is running; 422: the rescan has no results yet
+            if ([409, 422].includes(error.response?.status)) {
+              this.importMessage = error.response.data.message
+            }
           })
         },
 
