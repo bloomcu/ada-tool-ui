@@ -17,11 +17,21 @@
         </div>
       </AppHeader>
 
+      <!-- Import state: queued / running / failed / dropped, or a message from the last action -->
+      <div
+        v-if="importNotice"
+        class="mb-6 rounded-md p-4 text-sm ring-1 ring-inset"
+        :class="importNotice.tone === 'error'
+          ? 'bg-red-50 text-red-800 ring-red-600/20'
+          : 'bg-blue-50 text-blue-800 ring-blue-600/20'"
+      >
+        {{ importNotice.text }}
+      </div>
+
       <div class="flex flex-row items-start gap-x-6">
-        <!-- Conditional import button -->
-         
-        <AppButton v-if="scanStore.scan.status == 'SUCCEEDED' && !scanStore.scan.pages.length" @click="importDataset(scanStore.scan.id)" :loading="isImporting">
-          Import Results
+        <!-- Conditional import button: never imported, failed, or a dropped import -->
+        <AppButton v-if="canImport" @click="importDataset(scanStore.scan.id)" :loading="isImporting">
+          {{ isReimport ? 'Re-import Results' : 'Import Results' }}
         </AppButton>
         
         <!-- Scanned pages -->
@@ -40,10 +50,10 @@
             </thead>  
             <tbody class="divide-y divide-gray-200">
               <tr>
-                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ scanStore.scan.violation_count_pages  }}</td>
-                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ scanStore.scan.warning_count_pages }}</td>
-                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">{{ avgViolationsPerPage }}</td>
-                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ avgWarningsPerPage }}</td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ displayCount(scanStore.scan.violation_count_pages) }}</td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ displayCount(scanStore.scan.warning_count_pages) }}</td>
+                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">{{ displayAverage(avgViolationsPerPage) }}</td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ displayAverage(avgWarningsPerPage) }}</td>
                 
                 
                 
@@ -81,7 +91,7 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-200">
-                    <tr v-for="page in scanStore.scan.pages" :key="page.id" class="hover:bg-gray-50" :class="{'even:bg-gray-100': avgViolationsPerPage > page.violation_count && avgWarningsPerPage > page.warning_count,'bg-red-100':	avgViolationsPerPage < page.violation_count, 'bg-yellow-100':avgWarningsPerPage < page.warning_count}">
+                    <tr v-for="page in scanStore.scan.pages" :key="page.id" class="hover:bg-gray-50" :class="rowHighlight(page)">
                       <td class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 max-w-md">
                         <div class="truncate">{{ page.title }}</div>
 
@@ -172,7 +182,7 @@
 
 <script setup>
 import moment from 'moment'
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { InformationCircleIcon } from '@heroicons/vue/20/solid'
 import { useScanStore } from '@/domain/scans/store/useScanStore'
@@ -186,22 +196,113 @@ const scanStore = useScanStore()
 const authStore = useAuthStore()
 
 
+/**
+ * Average per affected page, or null when it can't be computed — totals missing (an import
+ * that never finished) or no affected pages (0/0). null, not NaN, so the UI can say so
+ */
+function average(total, pages) {
+  if (total == null || !pages) return null
+  return total / pages
+}
 const avgViolationsPerPage = computed(()=>{
-  return scanStore.scan.violation_count/scanStore.scan.violation_count_pages
+  return average(scanStore.scan.violation_count, scanStore.scan.violation_count_pages)
 })
 const avgWarningsPerPage = computed(()=>{
-  return scanStore.scan.warning_count/scanStore.scan.warning_count_pages
+  return average(scanStore.scan.warning_count, scanStore.scan.warning_count_pages)
 })
+
+function displayCount(value) {
+  return value ?? '—'
+}
+function displayAverage(value) {
+  return value === null ? '—' : Math.round(value * 10) / 10
+}
+
+/**
+ * Tint pages that are worse than the scan average. Skipped when an average is unavailable:
+ * comparing against null would coerce it to 0 and tint nearly every row
+ */
+function rowHighlight(page) {
+  const avgV = avgViolationsPerPage.value
+  const avgW = avgWarningsPerPage.value
+
+  return {
+    'even:bg-gray-100': avgV !== null && avgW !== null && avgV > page.violation_count && avgW > page.warning_count,
+    'bg-red-100': avgV !== null && avgV < page.violation_count,
+    'bg-yellow-100': avgW !== null && avgW < page.warning_count,
+  }
+}
+
+/**
+ * Import state, from scan.import_status (null = scan predates queued imports). A null status
+ * with null totals means never imported — or, if pages exist, an import that was cut off
+ */
+const isImportInProgress = computed(() => ['queued', 'importing'].includes(scanStore.scan?.import_status))
+const isDroppedImport = computed(() => {
+  const scan = scanStore.scan
+  return scan.import_status == null && scan.violation_count == null && scan.pages.length > 0
+})
+// Completed but stored nothing — re-importable, since there are no rescans to lose
+const isEmptyImport = computed(() => scanStore.scan.import_status === 'completed' && scanStore.scan.pages.length === 0)
+const isReimport = computed(() => scanStore.scan.import_status === 'failed' || isDroppedImport.value || isEmptyImport.value)
+const canImport = computed(() => {
+  const scan = scanStore.scan
+  if (scan.status !== 'SUCCEEDED') return false
+  return scan.import_status === 'failed'
+    || isEmptyImport.value
+    || (scan.import_status == null && scan.violation_count == null)
+})
+
+const importNotice = computed(() => {
+  if (scanStore.importMessage) {
+    return { tone: 'info', text: scanStore.importMessage }
+  }
+  switch (scanStore.scan.import_status) {
+    case 'queued':
+      return { tone: 'info', text: 'Import queued. Results will appear here when it finishes, which can take a few minutes.' }
+    case 'importing':
+      return { tone: 'info', text: 'Importing results… This page updates when the import finishes.' }
+    case 'failed':
+      return { tone: 'error', text: 'The last import failed. Re-import to try again.' }
+  }
+  if (isEmptyImport.value) {
+    return { tone: 'error', text: "The import finished, but no pages were found in this scan's results. Re-import to try again." }
+  }
+  if (isDroppedImport.value) {
+    const count = scanStore.scan.pages.length
+    return { tone: 'error', text: `This import didn't finish: only ${count} page${count === 1 ? ' was' : 's were'} saved. Re-import to load the full scan.` }
+  }
+  return null
+})
+
+/**
+ * While an import is queued or running, re-fetch every 10s so the results appear when it
+ * finishes. Stops on its own once the status settles, and when leaving the page
+ */
+const POLL_MS = 10000
+let pollTimer = null
+function stopPolling() {
+  clearInterval(pollTimer)
+  pollTimer = null
+}
+watch(() => scanStore.scan?.import_status, () => {
+  if (isImportInProgress.value && !pollTimer) {
+    pollTimer = setInterval(() => scanStore.refresh(route.params.scan), POLL_MS)
+  } else if (!isImportInProgress.value) {
+    stopPolling()
+  }
+}, { immediate: true })
+onUnmounted(stopPolling)
 const reviewablePageCount = computed(()=>{
   return scanStore.scan.pages.filter(page => page.customer_reviewable).length
 })
 
 async function importDataset(scanId) {
   isImporting.value = true
-  
-  await scanStore.importDataset(scanId).then(() => {
+
+  // Returns as soon as the import is queued; the import_status watcher follows it from here
+  await scanStore.importDataset(scanId).finally(() => {
     isImporting.value = false
-    scanStore.show(route.params.scan)
   })
 }
 
@@ -237,6 +338,7 @@ async function checkPageScanStatus(page_id, scan_id) {
 }
 
 onMounted(() => {
+  scanStore.importMessage = null
   scanStore.show(route.params.scan).then(() => {
 
     if (!scanStore.scan.pages.length) {
